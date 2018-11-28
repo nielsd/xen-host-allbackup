@@ -1,0 +1,49 @@
+#!/bin/bash
+#####################################
+## Snaphot Backup - Snapshot Unmounter
+##
+## usage:
+## snaps_backup <volume> <fstype> <mount string>
+
+#####################################
+## config
+
+# temp snapshot mount dir
+MNTSOURCEDIR="/4backup"
+
+# backup target dir (mountpoint of backup device)
+TARGETDIR="/backup/guests"
+
+# target path (by VM name / Xen DomU name here)
+TARGETPATH="/backup/guests/$BDOM"
+
+######################################
+
+# parameters (config file)
+BDOM=$1
+BNAME=$2
+SRCVOL=$3
+BFSTYPE=$4
+BFOPTS=$5
+
+MNTSOURCEPRE=$MNTSOURCEDIR/$BDOM
+MNTSOURCEPATH=$MNTSOURCEPRE/$BNAME
+
+# backup volume
+SNAPVOLUME=$SRCVOL.back
+
+## MAIN
+
+
+if [ -b $SNAPVOLUME ]
+then
+	#debug
+	#/bin/ls -al  $MNTSOURCEPATH
+	/bin/umount -f $MNTSOURCEPATH && echo "Unmounted $MNTSOURCEPATH" || echo "could NOT unmount $MNTSOURCEPATH !"
+	#sleep 1
+	/sbin/lvremove -f "$SNAPVOLUME" && echo "Remove $SNAPVOLUME" || echo "cloud NOT remove $SNAPVOLUME !"
+
+else
+	echo "Snapvolume $SNAPVOLUME NOT EXIST !"
+fi
+

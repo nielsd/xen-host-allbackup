@@ -1,0 +1,115 @@
+#!/bin/sh
+########################################
+## MAIN Backup Script  
+## by Niels
+## (c) 2017 (GPLv2)
+########################################
+
+SBCONFIGFILE="/etc/xenback_vols"
+SNAPBACKUPMNT="/usr/local/sbin/snaps_backup_mount"
+SNAPBACKUPUMNT="/usr/local/sbin/snaps_backup_umount"
+
+BACKUP_MANAGER="/usr/sbin/backup-manager"
+BACKUP_MANAGER_CONFIG="/etc/backup-manager.conf"
+
+# backup device
+BCKDEV="/dev/sdc5"
+
+# backup device filesystem (mount)
+BCKDEVMNTFS="ext4"
+
+# backup device mountpoint
+BCKMNTP="/backup/guests"
+
+# backup temp mount point (should be empty) 
+MNTSOURCEDIR="/4backup"
+
+
+#init
+#BM_TARBALL_DIRECTORIES=""
+#export BM_TARBALL_DIRECTORIES
+#TARBALL_DIRECTORY=""
+#export TARBALL_DIRECTORY
+
+echo ""
+echo "Mount BACKUP Device:"
+echo "===================="
+echo " "
+/bin/mount -t $BCKDEVMNTFS $BCKDEV $BCKMNTP && echo "done. " || echo "could NOT mount Backup Device (or still mounted) !" 
+
+
+echo " "
+echo "DO XEN SNAPBACKS"
+echo "================"
+echo " "
+
+while read NAME
+do
+	# init
+        BM_TARBALL_DIRECTORIES=""
+	export BM_TARBALL_DIRECTORIES
+	TARBALL_DIRECTORY=""
+	export TARBALL_DIRECTORY
+
+	BDOM=$(/bin/echo $NAME | /usr/bin/cut -d '|' -f 1)
+	BNAME=$(/bin/echo $NAME |/usr/bin/cut -d '|' -f 2)
+	BVOL=$(/bin/echo $NAME | /usr/bin/cut -d '|' -f 3)
+	BFSTYPE=$(/bin/echo $NAME |/usr/bin/cut -d '|' -f 4)
+	BFOPTS=$(/bin/echo $NAME |/usr/bin/cut -d '|' -f 5)
+
+
+	if [ -n "$BFOPTS" ]; then
+		echo "DOMAIN:	$BNAME"
+		echo "DOMPATH:	$BDOM"
+		echo "MOUNT:	$BVOL"
+		echo "AS:	$BFSTYPE"
+		echo "WITH:	$BFOPTS"
+		echo "________________________"
+
+		#BDOM=$1
+		#BNAME=$2
+		#SRCVOL=$3
+		#BFSTYPE=$4
+		#BFOPTS=$5
+
+		$SNAPBACKUPMNT $BDOM $BNAME $BVOL $BFSTYPE $BFOPTS && echo "Domain mounted" || echo "Domain mount ERROR!"
+
+		TARBALL_DIRECTORY=$MNTSOURCEDIR/$BDOM/$BNAME
+		echo " ";
+		echo "Directory in Backup aufnehmen: $TARBALL_DIRECTORY" 
+
+
+		# set dirs to backup as var for backup-manager
+		BM_TARBALL_DIRECTORIES="$BM_TARBALL_DIRECTORIES $TARBALL_DIRECTORY"
+		export BM_TARBALL_DIRECTORIES
+
+		# example
+		#BM_TARBALL_DIRECTORIES="/4backup/netbsd2/root/ /4backup/gentoo/root/"
+
+		export BM_TARBALL_DIRECTORIES
+
+		echo " "
+		echo "sichere Directories: $BM_TARBALL_DIRECTORIES"
+		echo " "
+		/bin/date
+		echo " "
+		echo "starte BACKUP-MANAGER:"
+		$BACKUP_MANAGER -v -c $BACKUP_MANAGER_CONFIG
+		echo " "
+		echo "beende BACKUP-MANAGER:"
+		echo " "
+
+		$SNAPBACKUPUMNT $BDOM $BNAME $BVOL $BFSTYPE $BFOPTS && echo "Domain unmounted" || echo "Domain umount ERROR!"
+                echo " ";
+		/bin/date
+		echo " "
+
+        fi
+done <  $SBCONFIGFILE
+
+
+echo ""
+echo "UNmount BACKUP Device:"
+echo "===================="
+echo " "
+/bin/umount $BCKMNTP && echo "done. " || echo "could NOT unmount Backup Device (possibly still mounted) !"

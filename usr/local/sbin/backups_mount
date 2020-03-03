@@ -1,0 +1,62 @@
+#!/bin/sh
+########################################
+## MOUNT / OPEN ALL Snapbacks
+##
+## by Niels
+## https://www.syndicat.com/
+## (c) 2015 (GPLv2)
+########################################
+
+# config
+XENBACK_CONF="/etc/xenbackup.conf"
+# read the config
+source $XENBACK_CONF
+
+#init
+#BM_TARBALL_DIRECTORIES=""
+#export BM_TARBALL_DIRECTORIES
+#TARBALL_DIRECTORY=""
+#export TARBALL_DIRECTORY
+
+echo ""
+echo "Mount BACKUP Device:"
+echo "================"
+echo " "
+$BIN_MOUNT -t $BCKDEV_FS $BCKDEV $BCKMNTP && echo "done. " || echo "could NOT mount Backup Device (or still mounted) !"
+
+
+echo " "
+echo "DO XEN SNAPBACKS"
+echo "================"
+echo " "
+
+while read NAME
+do
+	BDOM=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 1)
+	BNAME=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 2)
+	BVOL=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 3)
+	BFSTYPE=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 4)
+	BFOPTS=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 5)
+
+
+	if [ -n "$BFOPTS" ]; then
+		echo "DOMAIN:	$BNAME"
+		echo "DOMPATH:	$BDOM"
+		echo "MOUNT:	$BVOL"
+		echo "AS:	$BFSTYPE"
+		echo "WITH:	$BFOPTS"
+		echo "________________________"
+
+		#BDOM=$1
+		#BNAME=$2
+		#SRCVOL=$3
+		#BFSTYPE=$4
+		#BFOPTS=$5
+
+		$SNAPBACKUPMNT $BDOM $BNAME $BVOL $BFSTYPE $BFOPTS && echo "Domain mounted" || echo "Domain mount ERROR!"
+                echo " "
+		$BIN_DATE
+		echo " "
+
+        fi
+done <  $SBCONFIGFILE

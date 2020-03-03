@@ -1,36 +1,29 @@
 #!/bin/sh
-##################################
+###############################
 # backup user data
 # (c) 2009 by Niels Dettenbach
 # <nd@syndicat.com> GPL
 
-##################################
-## config
-
-# path to mailer (ssmtp, mailto, sendmail etc.)
-MYMAILER="/usr/sbin/ssmtp"
-
-# my monitor email
-MYMONEMAIL="mymonitor@syndicat.com"
-MYFROMEMAIL="myroot@syndicat.com"
-
-# backup log file
-LOGFILE="/var/log/backup_managers.log"
-
-HOSTN=`/bin/hostname`
-DOMAINN=`/bin/hostname -d`
+# config
+XENBACK_CONF="/etc/xenbackup.conf"
+# read the config
+source $XENBACK_CONF
 
 
-echo "From: $MYFROMEMAIL" > $LOGFILE
+echo "From: $EMAIL_FROM" > $LOGFILE
 echo "Subject: SNAPBACKUP on Host $HOSTN at $DOMAINN" >> $LOGFILE
 echo "" >> $LOGFILE
 echo "" >> $LOGFILE
 date  >>  $LOGFILE
 echo "" >> $LOGFILE
 
+#echo "Backup Dom0" >> $LOGFILE
+#/usr/sbin/backup-manager -v -c /etc/backup-manager-dom0.conf >> $LOGFILE
+#echo ""
+
 echo "Backup Guests:" >> $LOGFILE
 echo ""
 # mount and backup
-/usr/local/sbin/backup_all_guests >> $LOGFILE
+$SNAPBACKUPALLGUEST >> $LOGFILE
 
-/bin/cat $LOGFILE | $MYMAILER $MYMONEMAIL
+$BIN_CAT $LOGFILE | $BIN_SENDMAIL $EMAIL_TO

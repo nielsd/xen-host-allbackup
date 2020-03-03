@@ -1,0 +1,55 @@
+#!/bin/sh
+########################################
+## UNMOUNT / CLOSE ALL Snapbacks 
+##
+## by Niels
+## https://www.syndicat.com/
+## (c) 2015 (GPLv2)
+########################################
+
+# config
+XENBACK_CONF="/etc/xenbackup.conf"
+# read the config
+source $XENBACK_CONF
+
+echo ""
+echo "Unmount BACKUP Device:"
+echo "================"
+echo " "
+$BIN_DATE
+echo " "
+$BIN_UMOUNT $BCKMNTP && echo "done. " || echo "could NOT unmount Backup Device !" 
+
+
+echo " "
+echo "DO UMOUNT XEN SNAPBACKS"
+echo "================"
+echo " "
+
+while read NAME
+do
+        BDOM=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 1)
+        BNAME=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 2)
+        BVOL=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 3)
+        BFSTYPE=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 4)
+        BFOPTS=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 5)
+
+
+        if [ -n "$BFOPTS" ]; then
+                echo "DOMAIN:   $BNAME"
+                echo "DOMPATH:  $BDOM"
+                echo "MOUNT:    $BVOL"
+                echo "AS:       $BFSTYPE"
+                echo "WITH:     $BFOPTS"
+                echo "________________________"
+
+		$SNAPBACKUPUMNT $BDOM $BNAME $BVOL $BFSTYPE $BFOPTS && echo "Domain unmounted" || echo "Domain umount ERROR!"
+		echo " ";
+
+	fi
+done <  $SBCONFIGFILE
+
+echo " "
+$BIN_DATE
+echo " "
+

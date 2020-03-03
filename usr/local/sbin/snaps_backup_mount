@@ -5,22 +5,12 @@
 ## usage:
 ## snaps_backup <volume> <fstype> <mount string>
 
-#####################################
-## config
+# config
+XENBACK_CONF="/etc/xenbackup.conf"
+# read the config
+source $XENBACK_CONF
+#TARGETPATH="/backup/guests/$BDOM"
 
-# temp snapshot mount dir 
-MNTSOURCEDIR="/4backup"
-
-# backup target dir (mountpoint of backup device)
-TARGETDIR="/backup/guests"
-
-# target path (by VM name / Xen DomU name here)
-TARGETPATH="/backup/guests/$BDOM"
-
-# snapshot capacity
-SNAPSIZE="10G"
-
-#####################################
 
 # parameters
 BDOM=$1
@@ -42,24 +32,24 @@ export TARBALL_DIRECTORIES
 ## MAIN
 
 # create snapshot
-/sbin/lvcreate -L$SNAPSIZE -s -n $SNAPVOLUME $SRCVOL
+$BIN_LVCREATE -L$SNAPSIZE -s -n $SNAPVOLUME $SRCVOL
 
 # create Backup-DIR
 if [ -d "$MNTSOURCEPATH" ]
 then 
-	echo "Backup-Directory $MNTSOURCEPATH FOUND"
+	$BIN_ECHO "Backup-Directory $MNTSOURCEPATH FOUND"
 else
-	/bin/mkdir -p $MNTSOURCEPATH && echo "Backup-Directory $MNTSOURCEPATH CREATED" || echo "Backup-Directory $MNTSOURCEPATH NOT CREATED!"
+	$BIN_MKDIR -p $MNTSOURCEPATH && $BIN_ECHO "Backup-Directory $MNTSOURCEPATH CREATED" || $BIN_ECHO "Backup-Directory $MNTSOURCEPATH NOT CREATED!"
 fi
 
-/bin/mount -t $BFSTYPE -o$BFOPTS $SNAPVOLUME $MNTSOURCEPATH
+$BIN_MOUNT -t $BFSTYPE -oro,$BFOPTS $SNAPVOLUME $MNTSOURCEPATH
 
 # for backup manager
-#echo "altes DIR: $BM_TARBALL_DIRECTORIES"
+#echo "old DIR: $BM_TARBALL_DIRECTORIES"
 TARBALL_DIRECTORIES="$MNTSOURCEPATH"
 #export TARBALL_DIRECTORIES
-#echo "Erfasse DIR: $TARBALL_DIRECTORIES"
+#echo "catch DIR: $TARBALL_DIRECTORIES"
 
 
 #debug
-#/bin/ls -al  $MNTSOURCEPATH
+#$BIN_LS  $MNTSOURCEPATH

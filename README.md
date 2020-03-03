@@ -1,11 +1,11 @@
-# xen-host-allbackup
-XEN / LVM Host Auto-Backup for Xen DomU (live and online)
-(version 0.5)
+# xenbackup / xen-host-allbackup
+XEN / LVM Host Auto-Snapshot-Backup for Xen DomUs (live and online)
+(version 1.0a)
 
 
-It could be used to snapshot backup any kind of LVM.
+It could be used to snapshot backup any kind of Xen DomU LVM volumes (Linux, FreeBSD, NetBSD and windows) and should work on products like Citrix XenServer (untested) too.
 
-This Software provides easy automatic snapshot backups of LVM Volumes of hosted VMs. 
+This Software provides easy automatic and grouped snapshot backups of LVM Volumes of hosted VMs and could be used even for other virtualization platforms with LVM backends (KVM / KQEMU and others). 
 
 Currently it uses backup-manager to create and manage the tarballs, but could be modified to provide other kind of backup tools or just any suitable archivers up to rsync. If there is any real interest, i would add this.
 
@@ -13,25 +13,28 @@ Currently it uses backup-manager to create and manage the tarballs, but could be
 REQUIREMENTS
 ------------
  - install the "backup-manager" program
- - install "ssmtp" or any simple email sender program for email notifications
+ - install "ssmtp" or any simple email sender program ("sendmail") for email notifications
+
 
 
 INSTALLATION
 ------------
 As root on the LVM Host system ("Dom0" in XEN):
 
- - open the scripts in /usr/local/sbin/ and adapt the config sections
  - copy files to the host system
+ - edit config file /etc/xenbackup.conf
  - list your volumes in /etc/xenback_vols
  - check config of backup-manager /etc/backup-manager.conf (mainly point BM_REPOSITORY_ROOT="/backup/guests" to the "BCKMNTP" mountpoint in the scripts)
 
 
-TODO
+CHANGES
 ----
-This is very early, but working, software.
+This is productive software, but comes without any warranty!
 
+1.0a
  - single config file
- - make more generic (name and docs independent from Xen)
+ - generic pathes
+ - strong code cleanout
 
 
 DISCLAIMER

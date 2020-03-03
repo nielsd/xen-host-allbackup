@@ -1,2 +1,2 @@
-mydomu1|root|/dev/vgxen/mydomu1-root|ext4|ro,noatime
-mynetbsd2|root|/dev/vgxen/mynetbsd2-root|ufs|ro,ufstype=44bsd
+mydomu1|root|/dev/vgxen/mydomu1-root|ext4|noatime
+mynetbsd2|root|/dev/vgxen/mynetbsd2-root|ufs|ufstype=44bsd

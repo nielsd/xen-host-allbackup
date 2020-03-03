@@ -1,25 +1,16 @@
 #!/bin/bash
 #####################################
-## Snaphot Backup - Snapshot Unmounter
+## Snaphot Backup
 ##
 ## usage:
 ## snaps_backup <volume> <fstype> <mount string>
 
-#####################################
-## config
+# config
+XENBACK_CONF="/etc/xenbackup.conf"
+# read the config
+source $XENBACK_CONF
 
-# temp snapshot mount dir
-MNTSOURCEDIR="/4backup"
-
-# backup target dir (mountpoint of backup device)
-TARGETDIR="/backup/guests"
-
-# target path (by VM name / Xen DomU name here)
-TARGETPATH="/backup/guests/$BDOM"
-
-######################################
-
-# parameters (config file)
+# parameters
 BDOM=$1
 BNAME=$2
 SRCVOL=$3
@@ -38,12 +29,13 @@ SNAPVOLUME=$SRCVOL.back
 if [ -b $SNAPVOLUME ]
 then
 	#debug
-	#/bin/ls -al  $MNTSOURCEPATH
-	/bin/umount -f $MNTSOURCEPATH && echo "Unmounted $MNTSOURCEPATH" || echo "could NOT unmount $MNTSOURCEPATH !"
+	#$BIN_LS -al  $MNTSOURCEPATH
+
+	$BIN_UMOUNT -f $MNTSOURCEPATH && $BIN_ECHO "Unmounted $MNTSOURCEPATH" || $BIN_ECHO "could NOT unmount $MNTSOURCEPATH !"
 	#sleep 1
-	/sbin/lvremove -f "$SNAPVOLUME" && echo "Remove $SNAPVOLUME" || echo "cloud NOT remove $SNAPVOLUME !"
+	$BIN_LVREMOVE -f "$SNAPVOLUME" && $BIN_ECHO "Remove $SNAPVOLUME" || $BIN_ECHO "cloud NOT remove $SNAPVOLUME !"
 
 else
-	echo "Snapvolume $SNAPVOLUME NOT EXIST !"
+	$BIN_ECHO "Snapvolume $SNAPVOLUME NOT EXIST !"
 fi
 

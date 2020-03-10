@@ -22,7 +22,7 @@ echo " "
 $BIN_MOUNT -t $BCKDEV_FS $BCKDEV $BCKMNTP && echo "done. " || echo "could NOT mount Backup Device (or still mounted) !" 
 echo " "
 echo "space:"
-$BIN_DF -h $BCKMNTP
+$BIN_DF -hT $BCKMNTP | $BIN_TAIL -n +2
 
 # debug
 #exit
@@ -82,8 +82,10 @@ do
 		echo " "
 		$BIN_DATE
 		echo " "
+#for debug of
 		echo "starte BACKUP-MANAGER:"
-		$BIN_BACKUPMAN -v -c $BM_CONFIGFILE
+		$BIN_BACKUPMAN -v -c $BM_CONFIGFILE 2>%1
+#
 		echo " "
 		echo "beende BACKUP-MANAGER:"
 		echo " "

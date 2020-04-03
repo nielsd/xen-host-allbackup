@@ -1,9 +1,11 @@
-#!/bin/bash
+#!/bin/sh
 #####################################
 ## Snaphot Backup
 ##
-## usage:
-## snaps_backup <volume> <fstype> <mount string>
+## by Niels Dettenbach <nd@syndicat.com>
+
+usage="usage: $0 <vm name> <vol name> <vol device> <fs type> <mount opts>"
+
 
 # config
 XENBACK_CONF="/etc/xenbackup.conf"
@@ -29,27 +31,36 @@ SNAPVOLUME=$SRCVOL.back
 TARBALL_DIRECTORIES=""
 export TARBALL_DIRECTORIES
 
-## MAIN
 
-# create snapshot
-$BIN_LVCREATE -L$SNAPSIZE -s -n $SNAPVOLUME $SRCVOL
+### MAIN
 
-# create Backup-DIR
-if [ -d "$MNTSOURCEPATH" ]
-then 
-	$BIN_ECHO "Backup-Directory $MNTSOURCEPATH FOUND"
+if [ $5 ] && [ $BIN_LVCREATE ]
+then
+
+
+   # create snapshot
+   $BIN_LVCREATE -L$SNAPSIZE -s -n $SNAPVOLUME $SRCVOL
+
+   # create Backup-DIR
+   if [ -d "$MNTSOURCEPATH" ]
+      then
+         $BIN_ECHO "Backup-Directory $MNTSOURCEPATH FOUND"
+      else
+         $BIN_MKDIR -p $MNTSOURCEPATH && $BIN_ECHO "Backup-Directory $MNTSOURCEPATH CREATED" || $BIN_ECHO "Backup-Directory $MNTSOURCEPATH NOT CREATED!"
+   fi
+
+   $BIN_MOUNT -t $BFSTYPE -o$BFOPTS $SNAPVOLUME $MNTSOURCEPATH
+
+   # for backup manager
+   #echo "old DIR: $BM_TARBALL_DIRECTORIES"
+   TARBALL_DIRECTORIES="$MNTSOURCEPATH"
+   #export TARBALL_DIRECTORIES
+   #echo "catch DIR: $TARBALL_DIRECTORIES"
+
+
+   #debug
+   #$BIN_LS  $MNTSOURCEPATH
+
 else
-	$BIN_MKDIR -p $MNTSOURCEPATH && $BIN_ECHO "Backup-Directory $MNTSOURCEPATH CREATED" || $BIN_ECHO "Backup-Directory $MNTSOURCEPATH NOT CREATED!"
+   echo $usage
 fi
-
-$BIN_MOUNT -t $BFSTYPE -oro,$BFOPTS $SNAPVOLUME $MNTSOURCEPATH
-
-# for backup manager
-#echo "old DIR: $BM_TARBALL_DIRECTORIES"
-TARBALL_DIRECTORIES="$MNTSOURCEPATH"
-#export TARBALL_DIRECTORIES
-#echo "catch DIR: $TARBALL_DIRECTORIES"
-
-
-#debug
-#$BIN_LS  $MNTSOURCEPATH

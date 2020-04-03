@@ -5,7 +5,7 @@
 ## by Niels <nd@syndicat.com>
 ## https://www.syndicat.com/
 ## (c) 2015-2020 (GPLv2)
-## v1.0a
+## v1.0c
 ########################################
 
 
@@ -15,37 +15,39 @@ XENBACK_CONF="/etc/xenbackup.conf"
 source $XENBACK_CONF
 
 
-echo ""
-echo "Mount BACKUP Device:"
-echo "===================="
-echo " "
-$BIN_MOUNT -t $BCKDEV_FS $BCKDEV $BCKMNTP && echo "done. " || echo "could NOT mount Backup Device (or still mounted) !" 
-echo " "
-echo "space:"
-$BIN_DF -hT $BCKMNTP | $BIN_TAIL -n +2
+if [ $CONFIGURED ] && [ $SBCONFIGFILE ]
+then
 
-# debug
-#exit
+   echo ""
+   echo "Mount BACKUP Device:"
+   echo "===================="
+   echo " "
+   $BIN_MOUNT -t $BCKDEV_FS $BCKDEV $BCKMNTP && echo "done. " || echo "could NOT mount Backup Device (or still mounted) !" 
+   echo " "
+   echo "space:"
+   $BIN_DF -hT $BCKMNTP | $BIN_TAIL -n +2
 
-echo " "
-echo "DO XEN SNAPBACKS"
-echo "================"
-echo " "
+   # debug
+   #exit
 
-while read NAME
-do
-	# init
-        BM_TARBALL_DIRECTORIES=""
-	export BM_TARBALL_DIRECTORIES
-	TARBALL_DIRECTORY=""
-	export TARBALL_DIRECTORY
+   echo " "
+   echo "DO XEN SNAPBACKS"
+   echo "================"
+   echo " "
 
-	BDOM=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 1)
-	BNAME=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 2)
-	BVOL=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 3)
-	BFSTYPE=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 4)
-	BFOPTS=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 5)
+   while read NAME
+   do
+      # init
+      BM_TARBALL_DIRECTORIES=""
+      export BM_TARBALL_DIRECTORIES
+      TARBALL_DIRECTORY=""
+      export TARBALL_DIRECTORY
 
+      BDOM=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 1)
+      BNAME=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 2)
+      BVOL=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 3)
+      BFSTYPE=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 4)
+      BFOPTS=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 5)
 
 	if [ -n "$BFOPTS" ]; then
 		echo "DOMAIN:	$BNAME"
@@ -60,6 +62,9 @@ do
 		#SRCVOL=$3
 		#BFSTYPE=$4
 		#BFOPTS=$5
+
+		# sleep between snap mount jobs (security)
+		$BIN_SLEEP $SNAPMOUNTDELAY
 
 		$SNAPBACKUPMNT $BDOM $BNAME $BVOL $BFSTYPE $BFOPTS && echo "Domain mounted" || echo "Domain mount ERROR!"
 
@@ -82,25 +87,31 @@ do
 		echo " "
 		$BIN_DATE
 		echo " "
-#for debug of
+
+                ##for debug of
 		echo "starte BACKUP-MANAGER:"
 		$BIN_BACKUPMAN -v -c $BM_CONFIGFILE 2>%1
-#
+                ##
+
 		echo " "
 		echo "beende BACKUP-MANAGER:"
 		echo " "
 
-		$SNAPBACKUPUMNT $BDOM $BNAME $BVOL $BFSTYPE $BFOPTS && echo "Domain unmounted" || echo "Domain umount ERROR!"
+		$SNAPBACKUPUMNT $BDOM $BNAME $BVOL && echo "Domain unmounted" || echo "Domain umount ERROR!"
                 echo " ";
 		$BIN_DATE
 		echo " "
 
         fi
-done <  $SBCONFIGFILE
+   done < $SBCONFIGFILE
 
 
-echo ""
-echo "UNmount BACKUP Device:"
-echo "===================="
-echo " "
-$BIN_UMOUNT $BCKMNTP && echo "done. " || echo "could NOT unmount Backup Device (possibly still mounted) !"
+   echo ""
+   echo "UNmount BACKUP Device:"
+   echo "===================="
+   echo " "
+   $BIN_UMOUNT $BCKMNTP && echo "done. " || echo "could NOT unmount Backup Device (possibly still mounted) !"
+
+else
+   echo "error: no config files found or empty"
+fi

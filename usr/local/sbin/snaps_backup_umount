@@ -1,7 +1,12 @@
-#!/bin/bash
+#!/bin/sh
 #####################################
 ## Snaphot Backup
 ##
+##
+## by Niels Dettenbach <nd@syndicat.com>
+
+usage="usage: $0 <vm name> <vol name> <vol device>"
+
 ## usage:
 ## snaps_backup <volume> <fstype> <mount string>
 
@@ -14,8 +19,8 @@ source $XENBACK_CONF
 BDOM=$1
 BNAME=$2
 SRCVOL=$3
-BFSTYPE=$4
-BFOPTS=$5
+#BFSTYPE=$4
+#BFOPTS=$5
 
 MNTSOURCEPRE=$MNTSOURCEDIR/$BDOM
 MNTSOURCEPATH=$MNTSOURCEPRE/$BNAME
@@ -25,17 +30,23 @@ SNAPVOLUME=$SRCVOL.back
 
 ## MAIN
 
-
-if [ -b $SNAPVOLUME ]
+if [ $3 ] && [ $BIN_LVREMOVE ] && [ $BIN_UMOUNT ]
 then
-	#debug
-	#$BIN_LS -al  $MNTSOURCEPATH
 
-	$BIN_UMOUNT -f $MNTSOURCEPATH && $BIN_ECHO "Unmounted $MNTSOURCEPATH" || $BIN_ECHO "could NOT unmount $MNTSOURCEPATH !"
-	#sleep 1
-	$BIN_LVREMOVE -f "$SNAPVOLUME" && $BIN_ECHO "Remove $SNAPVOLUME" || $BIN_ECHO "cloud NOT remove $SNAPVOLUME !"
+   if [ -b $SNAPVOLUME ]
+      then
+      #debug
+      #$BIN_LS -al  $MNTSOURCEPATH
+
+      $BIN_UMOUNT -f $MNTSOURCEPATH && $BIN_ECHO "Unmounted $MNTSOURCEPATH" || $BIN_ECHO "could NOT unmount $MNTSOURCEPATH !"
+      #sleep 1
+      $BIN_LVREMOVE -f "$SNAPVOLUME" && $BIN_ECHO "Remove $SNAPVOLUME" || $BIN_ECHO "cloud NOT remove $SNAPVOLUME !"
+
+   else
+      $BIN_ECHO "Snapvolume $SNAPVOLUME NOT EXIST !"
+   fi
 
 else
-	$BIN_ECHO "Snapvolume $SNAPVOLUME NOT EXIST !"
-fi
+   echo $usage
 
+fi

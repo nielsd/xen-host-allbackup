@@ -31,19 +31,15 @@ do
         BDOM=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 1)
         BNAME=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 2)
         BVOL=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 3)
-        BFSTYPE=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 4)
-        BFOPTS=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 5)
 
 
-        if [ -n "$BFOPTS" ]; then
+        if [ -n "$BVOL" ]; then
                 echo "DOMAIN:   $BNAME"
                 echo "DOMPATH:  $BDOM"
                 echo "MOUNT:    $BVOL"
-                echo "AS:       $BFSTYPE"
-                echo "WITH:     $BFOPTS"
                 echo "________________________"
 
-		$SNAPBACKUPUMNT $BDOM $BNAME $BVOL $BFSTYPE $BFOPTS && echo "Domain unmounted" || echo "Domain umount ERROR!"
+		$SNAPBACKUPUMNT $BDOM $BNAME $BVOL && echo "Domain unmounted" || echo "Domain umount ERROR!"
 		echo " ";
 
 	fi

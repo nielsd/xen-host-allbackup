@@ -43,6 +43,11 @@ then
       TARBALL_DIRECTORY=""
       export TARBALL_DIRECTORY
 
+      # backup file prefix is hostname
+      BM_ARCHIVE_PREFIX=$HOSTN
+      export BM_ARCHIVE_PREFIX
+
+
       BDOM=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 1)
       BNAME=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 2)
       BVOL=$($BIN_ECHO $NAME | $BIN_CUT -d '|' -f 3)
@@ -72,6 +77,10 @@ then
 		echo " ";
 		echo "Directory in Backup aufnehmen: $TARBALL_DIRECTORY" 
 
+
+		# backup file prefix is hostname
+		BM_ARCHIVE_PREFIX=$HOSTN
+		export BM_ARCHIVE_PREFIX
 
 		# set dirs to backup as var for backup-manager
 		BM_TARBALL_DIRECTORIES="$BM_TARBALL_DIRECTORIES $TARBALL_DIRECTORY"

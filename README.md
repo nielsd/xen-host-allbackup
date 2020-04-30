@@ -24,12 +24,17 @@ As root on the LVM Host system ("Dom0" in XEN):
  - copy files to the host system
  - edit config file /etc/xenbackup.conf
  - list your volumes in /etc/xenback_vols
- - check config of backup-manager /etc/backup-manager.conf (mainly point BM_REPOSITORY_ROOT="/backup/guests" to the "BCKMNTP" mountpoint in the scripts)
+ - check config of backup-manager /etc/backup-manager.conf (mainly point BM_REPOSITORY_ROOT="/backup/guests" to your real backup volumes mountpoint and/or adapt mountpoint in /etc/fstab)
 
 
 CHANGES
 ----
 This is productive software, but comes without any warranty!
+
+1.1 RELEASE
+ - simplified config for more modern environments
+ - mount / backup job delays
+ - bug fixes
 
 1.0a
  - single config file

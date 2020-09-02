@@ -31,6 +31,10 @@ CHANGES
 ----
 This is productive software, but comes without any warranty!
 
+1.2 RELEASE
+ - bugfix in auto creation of mount dirs for new volumes
+
+
 1.1 RELEASE
  - simplified config for more modern environments
  - mount / backup job delays

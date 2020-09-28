@@ -1,6 +1,7 @@
 # xenbackup / xen-host-allbackup
+XEN VM Backup Tool
+------------------
 XEN / LVM Host Auto-Snapshot-Backup for Xen DomUs (live and online)
-(version 1.0b)
 
 
 It could be used to snapshot backup any kind of Xen DomU LVM volumes (Linux, FreeBSD, NetBSD and windows) and should work on products like Citrix XenServer (untested) too.

@@ -67,7 +67,7 @@ you have to make shure, the directories exist and adapt the pathes in /etc/backu
 there is no disk space used on dom0 for backup data during the backup process.
 
 **/etc/xenback_vols**
-add any volumes with required mount options (for the auto-created temporarily snapshot) to 
+add any volumes - line by line - with required mount options (for the auto-created temporarily snapshot) to 
 /etc/xenback_vols
 
 `
@@ -75,9 +75,12 @@ mydomu1|root|/dev/vgxen/mydomu1-root|ext4|ro,noatime
 mydomu2|var|/dev/vgxen/mydomu1-var||ufs|ro,ufstype=44bsd
 ...
 `
+
 in the format:
 
-`DomU name|partition name|device file|fs-type|mount options (after -o - comma separated)`
+`
+DomU name|partition name|device file|fs-type|mount options (after -o - comma separated)
+`
 
 important: you have to add some option to mount the snapshot read-only (i.e. ro) to avoid warnings in the log.
 

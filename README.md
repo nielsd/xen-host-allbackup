@@ -72,6 +72,7 @@ add any volumes - line by line - with required mount options (for the auto-creat
 
 `
 mydomu1|root|/dev/vgxen/mydomu1-root|ext4|ro,noatime
+
 mydomu2|var|/dev/vgxen/mydomu1-var||ufs|ro,ufstype=44bsd
 ...
 `

@@ -49,16 +49,16 @@ CONFIGURATION
 
 you definitely have to adapt this settings to your setup and the directories (used mount points) should exist:
 `
-# backup target device
+ # backup target device
 BCKDEV="/dev/sdb2"
 BCKDEV_FS="ext4"
 `
 if you change this settings:
 `
-# backup device mount point
+ # backup device mount point
 BCKMNTP="/backup/guests"
 
-# snapshots temp. mount directory
+ # snapshots temp. mount directory
 MNTSOURCEDIR="/4backup"
 `
 

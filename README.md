@@ -108,6 +108,9 @@ CHANGES
 --------
 This is productive software, but comes without any warranty!
 
+1.3 RELEASE
+ - added docs
+
 1.2 RELEASE
  - bugfix in auto creation of mount dirs for new volumes
 

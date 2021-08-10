@@ -48,18 +48,18 @@ CONFIGURATION
 **/etc/xenbackup.conf**
 
 you definitely have to adapt this settings to your setup and the directories (used mount points) should exist:
-`
- # backup target device
-BCKDEV="/dev/sdb2"
-BCKDEV_FS="ext4"
-`
-if you change this settings:
-`
- # backup device mount point
-BCKMNTP="/backup/guests"
 
- # snapshots temp. mount directory
-MNTSOURCEDIR="/4backup"
+backup target device
+`BCKDEV="/dev/sdb2"
+BCKDEV_FS="ext4"`
+
+if you change this settings:
+
+backup device mount point
+`BCKMNTP="/backup/guests"`
+
+snapshots temp. mount directory
+`MNTSOURCEDIR="/4backup"`
 `
 
 you have to make shure, the directories exist and adapt the pathes in /etc/backup-manager.conf as well!

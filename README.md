@@ -50,31 +50,37 @@ CONFIGURATION
 you definitely have to adapt this settings to your setup and the directories (used mount points) should exist:
 
 backup target device
-`BCKDEV="/dev/sdb2"
-BCKDEV_FS="ext4"`
+`
+BCKDEV="/dev/sdb2"
+BCKDEV_FS="ext4"
+`
 
 if you change this settings:
 
 backup device mount point
-`BCKMNTP="/backup/guests"`
+`
+BCKMNTP="/backup/guests"
+`
 
 snapshots temp. mount directory
-`MNTSOURCEDIR="/4backup"`
+`
+MNTSOURCEDIR="/4backup"
 `
 
 you have to make shure, the directories exist and adapt the pathes in /etc/backup-manager.conf as well!
-`
+
 there is no disk space used on dom0 for backup data during the backup process.
 
 **/etc/xenback_vols**
 add any volumes - line by line - with required mount options (for the auto-created temporarily snapshot) to 
 /etc/xenback_vols
 
+
 `
 mydomu1|root|/dev/vgxen/mydomu1-root|ext4|ro,noatime
-
+`
+`
 mydomu2|var|/dev/vgxen/mydomu1-var||ufs|ro,ufstype=44bsd
-...
 `
 
 in the format:

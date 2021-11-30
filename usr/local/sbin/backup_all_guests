@@ -12,7 +12,7 @@
 
 XENBACK_CONF="/etc/xenbackup.conf"
 # read the config
-source $XENBACK_CONF
+. $XENBACK_CONF
 
 
 if [ $CONFIGURED ] && [ $SBCONFIGFILE ]

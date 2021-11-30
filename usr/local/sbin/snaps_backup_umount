@@ -13,7 +13,7 @@ usage="usage: $0 <vm name> <vol name> <vol device>"
 # config
 XENBACK_CONF="/etc/xenbackup.conf"
 # read the config
-source $XENBACK_CONF
+. $XENBACK_CONF
 
 # parameters
 BDOM=$1

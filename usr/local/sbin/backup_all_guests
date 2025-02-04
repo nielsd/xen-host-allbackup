@@ -97,10 +97,13 @@ then
 		$BIN_DATE
 		echo " "
 
-                ##for debug of
 		echo "starte BACKUP-MANAGER:"
-		$BIN_BACKUPMAN -v -c $BM_CONFIGFILE 2>%1
-                ##
+		# for debug off
+                #$BIN_BACKUPMAN -v -c $BM_CONFIGFILE 2>%1
+                $BIN_BACKUPMAN -v -c $BM_CONFIGFILE &
+                BACK_PID=$!
+                wait $BACK_PID
+
 
 		echo " "
 		echo "beende BACKUP-MANAGER:"

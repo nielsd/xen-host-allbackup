@@ -120,6 +120,15 @@ CHANGES
 --------
 This is productive software, but comes without any warranty!
 
+1.6 RELEASE
+ - added nice and nice config
+ - added ionice and ionice config
+ - bugfixes / more reliable functionality
+ - some code cleanup
+
+1.4
+ - bug fixes
+   
 1.3 RELEASE
  - added docs
 

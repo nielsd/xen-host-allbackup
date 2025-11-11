@@ -110,7 +110,7 @@ then
 		echo "beende BACKUP-MANAGER:"
 		echo " "
 
-		$SNAPBACKUPUMNT $BDOM $BNAME $BVOL && echo "Domain unmounted" || echo "Domain umount ERROR!"
+		$CMD_FULLNICE $SNAPBACKUPUMNT $BDOM $BNAME $BVOL && echo "Domain unmounted" || echo "Domain umount ERROR!"
                 echo " ";
 		$BIN_DATE
 		echo " "

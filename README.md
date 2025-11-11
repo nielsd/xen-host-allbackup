@@ -1,4 +1,4 @@
-# xenbackup / xen-backup
+# xenbackup / vm-backup
 XEN VM Backup Tool
 ------------------
 XEN / LVM Host auto snapshot backup for Xen virtual machines (DomUs) (live and online)

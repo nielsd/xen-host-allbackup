@@ -1,10 +1,22 @@
-# xenbackup / xen-host-allbackup
+# xenbackup / xen-backup
 XEN VM Backup Tool
 ------------------
-XEN / LVM Host Auto-Snapshot-Backup for Xen DomUs (live and online)
+XEN / LVM Host auto snapshot backup for Xen virtual machines (DomUs) (live and online)
 
+provides:
+---------
+- daily / nightly (compressed) tarballs of VM content to disk, tape, NAS, to cloud or other storage
+- incremental daily backups
+- daily email reports + logfile
+- define amount of days, weeks and monthes to held backups
+- auto-mount / un-mount of backup devices / storage resources
+- garbage collection
+- mixed filesystems ext4, zfs, ufs, ffsv2, vfat and many more (Linux, *FreeBSD, NetBSD, OpenBSD, Unix, DOS...)
+- low resource footprint
+- flexible configuration of your backups
 
-It could be used to snapshot backup any kind of Xen DomU LVM volumes (Linux, FreeBSD, NetBSD and windows) and should work on products like Citrix XenServer (untested) too.
+It could be used to snapshot backup any kind of Xen virtual machines (DomU) LVM volumes and should work on products like Citrix XenServer (untested) too and it could be used on other virtualization / cloud environments (i.e. KVM, LXD, LXC, Kubernetes, Docker) where VMs use LVM storage on the host.
+
 
 This Software provides easy automatic and grouped snapshot backups of LVM Volumes of hosted VMs and could be used even for other virtualization platforms with LVM backends (KVM / KQEMU and others). 
 
